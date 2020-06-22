@@ -1,15 +1,22 @@
 const path = require('path')
 const express = require("express")
+const hbs = require('hbs')
 
 const app = express() //doesn't take in args
+
+//Define paths
 const publicDirPath = path.join(__dirname, '../public')
 //this is optional (allows you to call views directory by another name) Make sure you use app.set('views',viewsPath)
-const viewsPath = path.join(__dirname, '../templates')
+const viewsPath = path.join(__dirname, '../templates/views')
+const partialsPath = path.join(__dirname, '../templates/partials')
 
 //express needs the first key to be view engine and second to be hbs
 //this sets up handlebars
 app.set('view engine', 'hbs')
 app.set('views', viewsPath)
+hbs.registerPartials(partialsPath)
+
+
 app.use(express.static(publicDirPath))
 
 app.get('', (req, res) => {
@@ -28,8 +35,17 @@ app.get('/about', (req, res) => {
 
 app.get('/help', (req, res) => {
     res.render('help', {
-        title: 'Help Page',
-        message: 'This is the help message'
+        title: 'Help',
+        message: 'This is the help message',
+        name: 'Allen Zou'
+    })
+})
+
+app.get('/help/*', (req, res) => {
+    res.render('error', {
+        title: '404 Error',
+        name: 'Allen Zou',
+        message: 'Help article not found'
     })
 })
 
@@ -42,6 +58,16 @@ app.get('/weather', (req, res) => {
             location: 'new york'
         }
     )
+})
+
+// * is the wild card character
+// it is meant as the error page
+app.get('*', (req, res) => {
+    res.render('error', {
+        title: '404 Error',
+        name: 'Allen Zou',
+        message: 'Page not found'
+    })
 })
 
 //starts server (args=port,callback function for when server starts)
