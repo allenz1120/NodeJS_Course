@@ -1,7 +1,7 @@
 const request = require('postman-request')
 
 const forecast = (latitude, longitude, callback) => {
-    const url = 'http://api.weatherstack.com/current?access_key=82f6f16d46c62907ab24f177a3b22306&query=' + latitude + ',' + longitude + '&units=f';
+    const url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + latitude + "&lon=" + longitude + "&exclude=hourly,minutely,daily&appid=a378ae5e878feab333263975d61975fc&units=imperial"
 
     request({ url, json: true }, (error, { body } = {}) => {
         if (error) {
@@ -11,7 +11,7 @@ const forecast = (latitude, longitude, callback) => {
             callback('Unable to find location', undefined);
         }
         else {
-            const message = body.current.weather_descriptions[0] + ". It is currently " + body.current.temperature + " farenheit out. It feels like " + body.current.feelslike + " farenheit out"
+            const message = body.current.weather[0].description + ". It is currently " + body.current.temp + " farenheit out. It feels like " + body.current.feels_like + " farenheit out"
             callback(undefined, message)
         }
     })
